@@ -1,4 +1,4 @@
-BilgiSistemGuvenligi-ekip10
+BilgiSistemGuvenligi-ekip10 
 1.Kişislerin kendi dosyasını açmasını ve kısaca kendilerinden bahsetmesi.
 2.Ön Araştırma: ocpp-canbus-swot-smart gibi kavramlar araştırılsın ve dosyalarında anladıklarının not edilmesi.
 3.Makale seçimi, makaleye ait swot analizi yapılıp anomali(diğer kişilerden eşsiz) ortaya koyma.(resimlerle desteklenecek) 
