@@ -1,1 +1,61 @@
+Kritik Altyapı Güvenlik Analizi: Şarj Cihazı Konum ve Zaman Anomalisi
+TARİH: 3 Kasım 2025
+HAZIRLAYAN: İbrahim Halil Şahin
+Öğrenci No:230541112
+DURUM: Yüksek Öncelikli Güvenlik Değerlendirmesi
+1. Özet
+Bu analiz, 'Şarj cihazının menzil dışından veya beklenmeyen bir zamanda (gece yarısı gibi) aktif olması' olarak tanımlanan spesifik bir siber-fiziksel anomaliyi incelemektedir. Bu senaryo, genellikle akıllı şebekelere (smart grids) bağlı Elektrikli Araç (EV) şarj istasyonları veya diğer kritik IoT (Nesnelerin İnterneti) cihazları için geçerlidir. Bu tür bir anomali, basit bir teknik arızadan ziyade, genellikle yetkisiz erişim, siber saldırı veya kritik altyapıya yönelik koordineli bir tehdidin habercisidir. Analiz, bu anomalinin kök nedenlerini, potansiyel risklerini, bir SWOT değerlendirmesini ve alınması gereken önleyici tedbirleri detaylandırmaktadır.
+2. Anomali Tanımı ve Detaylandırılması
+İncelenen anomali iki ana bileşenden oluşur:
+Fiziksel Konum Anomalisi (Menzil Dışı):
+Senaryo: Şarj cihazı, beklenen coğrafi konumunun (geo-fence) dışında bir yerden başlatma komutu alır veya fiziksel olarak bilinen konumunun dışında olmasına rağmen ağda aktif görünür.
+Teknik Anlamı: Bu durum, genellikle IP adresi tabanlı coğrafi kısıtlamaların (IP geo-fencing) aşılması veya cihazın kimlik doğrulama bilgilerinin çalınarak uzaktan, beklenmedik bir ağdan kullanılması anlamına gelir.
+Zaman Anomalisi (Beklenmeyen Aktivasyon):
+Senaryo: Cihaz, normal kullanım düzeninin tamamen dışında bir zamanda (örneğin, bir ofis otoparkındaki şarj cihazının Pazar gecesi 03:00'te aktif olması) çalışmaya başlar.
+Teknik Anlamı: Bu, cihazın kullanım alışkanlıklarını öğrenen (machine learning) anomali tespit sistemleri için belirgin bir 'kırmızı bayrak'tır.
+3. Olası Kök Nedenler ve Zafiyetler
+Zayıf Kimlik Doğrulama
+Güvensiz Ağ Yapılandırması
+Protokol Zafiyetleri (OCPP)
+API Güvensizliği
+Fiziksel Tahrifat (Tampering)
+Güncellenmemiş Aygıt Yazılımı (Firmware)
+4. Riskler ve Potansiyel Etkileri
+Finansal Kayıp ve Enerji Hırsızlığı
+Hizmet Reddi (DoS)
+Kritik Veri İhlali
+Şebeke (Grid) Destabilizasyonu
+Fiziksel Güvenlik Riski
+5. SWOT Analizi: Konum ve Zaman Anomalisine Karşı Güvenlik
+GÜÇLÜ YÖNLER (Strengths)
+Zengin Veri Toplama
+Merkezi Yönetim
+Standart Protokoller
+ZAYIF YÖNLER (Weaknesses)
+Fiziksel Dağınıklık
+Eski Sistemler
+Güvenlik Bilinci Eksikliği
+Karmaşık Ekosistem
+FIRSATLAR (Opportunities)
+Yapay Zeka ve Makine Öğrenimi
+Federated Learning
+Sıfır Güven Mimarisi
+Blokzincir
+TEHDİTLER (Threats)
+Organize Siber Suç ve Botnet'ler
+Devlet Destekli Saldırılar
+Tedarik Zinciri Saldırıları
+Hızlı Büyüme
+6. Çözüm ve Önleme Stratejileri
+Kısa Vadeli Müdahale Planı (Immediate Action Plan):
+İzolasyon (Quarantine): Anomaliyi sergileyen cihazın ağı derhal kesilmelidir.
+Gücü Kesme (Shutdown): Uzaktan yönetim üzerinden enerji kesilmelidir.
+Kimlik Bilgisi Sıfırlama: Tüm yönetici şifreleri ve API anahtarları yenilenmelidir.
+Adli Bilişim (Forensics): Log kayıtları alınarak saldırı analizi yapılmalıdır.
+Uzun Vadeli Önleme Stratejileri:
+Uçtan Uca Şifreleme (TLS 1.2+) kullanılmalıdır.
+ML tabanlı anomali tespiti sistemleri kurulmalıdır.
+Ağ Segmentasyonu ile cihazlar ayrı VLAN’da çalışmalıdır.
+Geo-fencing ile belirli IP’lerden erişim izni verilmelidir.
+Düzenli Güvenlik Denetimi ve Firmware güncellemeleri yapılmalıdır.
 
