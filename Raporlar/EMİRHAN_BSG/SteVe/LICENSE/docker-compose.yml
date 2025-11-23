@@ -1,0 +1,34 @@
+version: "3.0"
+
+volumes:
+  db-data:
+    external: false
+
+services:
+
+  db:
+    # Pinning MariaDB to point release 10.4.30 works around the issues with the
+    # database migrations seen with 10.4.31 in issue #1212.
+    #
+    # TODO: Get database migrations to work with the latest point releases of
+    # MariaDB 10.4.
+    image: mariadb:10.4.30
+    restart: unless-stopped
+    ports:
+      - 3307:3306
+    environment:
+      MYSQL_RANDOM_ROOT_PASSWORD: "yes"
+      MYSQL_DATABASE: stevedb
+      MYSQL_USER: steve
+      MYSQL_PASSWORD: steve
+  app:
+    restart: unless-stopped
+    build: .
+    links:
+      - "db:mariadb"
+    ports:
+      - "8180:8180"
+      - "8443:8443"
+    depends_on:
+      - db
+    
