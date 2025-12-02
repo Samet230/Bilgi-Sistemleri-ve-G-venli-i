@@ -9,7 +9,6 @@ from datetime import datetime, timezone, timedelta
 from pathlib import Path
 
 # -----------------------
-# إعدادات لوج وملف
 # -----------------------
 log_dir = Path("logs")
 log_dir.mkdir(exist_ok=True)
@@ -325,3 +324,4 @@ if __name__ == "__main__":
         asyncio.run(sim.run())
     except KeyboardInterrupt:
         print("Interrupted.")
+
