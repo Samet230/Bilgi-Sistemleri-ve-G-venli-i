@@ -1,4 +1,4 @@
-# ⚠ Anomali Senaryosu – Enerji Fiyatlandırma Güvenliği (OCPP)
+#  Anomali Senaryosu – Enerji Fiyatlandırma Güvenliği (OCPP)
 
 ## Rapor: Senaryo — Fiyatlandırma Parametrelerinin Sık ve Aralıklı Değişimi ile Hatalı Faturalama
 **Senaryo Başlığı:**  
@@ -6,7 +6,7 @@ Dinamik Tarife Değişimi → Fiyat Tutarsızlığı → Hatalı Faturalama ve E
 
 ---
 
-## 🧾 Özet
+##  Özet
 
 Bu senaryoda, elektrikli araç şarj altyapısında enerji fiyatlandırma parametreleri  
 (**birim fiyat, zaman dilimi, güç bazlı ücretlendirme, kampanya ve vergi bileşenleri**)  
@@ -18,7 +18,7 @@ ortaya çıkarak **fiyat tutarsızlığı**, **hatalı faturalama** ve
 
 ---
 
-## 1️⃣ Başlangıç Durumu
+## 1️ Başlangıç Durumu
 
 - Şarj istasyonu (CS), merkezi sistem (CSMS) ile OCPP üzerinden haberleşmektedir.
 - Fiyatlandırma:
@@ -32,7 +32,7 @@ ortaya çıkarak **fiyat tutarsızlığı**, **hatalı faturalama** ve
 
 ---
 
-## 2️⃣ Anomali Oluşumu
+## 2️ Anomali Oluşumu
 
 - CSMS tarafında:
   - Tarife parametreleri kısa aralıklarla güncellenir.
@@ -47,7 +47,7 @@ Bu durumda:
 
 ---
 
-## 3️⃣ Anomali Akışı / Sömürü
+## 3️ Anomali Akışı / Sömürü
 
 - Aktif bir şarj oturumu devam ederken:
   - Birim fiyat değiştirilir.
@@ -67,7 +67,7 @@ Bu durumda:
 
 ---
 
-## 4️⃣ Algılama Mantığı (Detection Logic)
+## 4️ Algılama Mantığı (Detection Logic)
 
 Aşağıdaki göstergeler anomali sinyali olarak değerlendirilir:
 
@@ -79,7 +79,7 @@ Aşağıdaki göstergeler anomali sinyali olarak değerlendirilir:
 
 ---
 
-## 5️⃣ Karar ve Tepki Mekanizması
+## 5️ Karar ve Tepki Mekanizması
 
 Anomali tespit edildiğinde sistem aşağıdaki aksiyonları alır:
 
@@ -92,7 +92,7 @@ Anomali tespit edildiğinde sistem aşağıdaki aksiyonları alır:
 
 ---
 
-## 6️⃣ Log Örneği
+## 6️ Log Örneği
 
 ```text
 2025-11-05T14:22:10Z | StationID: ST-104 | event=PRICE_UPDATE
