@@ -1,1 +1,83 @@
 
+
+import can
+import time
+import logging
+import threading
+
+logging.basicConfig(level=logging.INFO, format='%(asctime)s | %(levelname)s | %(message)s')
+
+# CAN arayüzü
+bus = can.interface.Bus(interface='virtual')
+
+# === 1. Arka Plan: Sürekli CAN Trafiği Gönderen Fonksiyon ===
+def send_periodic_traffic():
+    """Çeşitli sensör/veri trafiğini simüle eder (Ağ yükü simülasyonu)."""
+
+    id_list = [0x500, 0x501, 0x502] # Örn: Voltaj, Akım, Sıcaklık
+
+    logging.info("PERIODIK CAN: Sürekli arka plan trafiği BAŞLATILDI (ID 0x5xx).")
+
+    while True:
+        try:
+            for arb_id in id_list:
+                # Rastgele veri simülasyonu
+                data = [arb_id & 0xFF, (int(time.time()) % 255), 0, 0, 0, 0, 0, 0]
+
+                msg = can.Message(
+                    arbitration_id=arb_id,
+                    data=data,
+                    is_extended_id=False
+                )
+                bus.send(msg)
+
+            time.sleep(0.05) # Saniyede 20 frame gönderme simülasyonu
+
+        except KeyboardInterrupt:
+            logging.info("PERIODIK CAN: Trafik gönderme durduruldu.")
+            break
+        except Exception as e:
+            # Bu, VirtualBus kapatıldığında tetiklenebilir
+            pass
+
+# === 2. Ana İşlev: CP'den Gelen Mesajları Dinleme ===
+def listen_for_cp_commands():
+    """CP'den gelen kontrol mesajlarını dinler (0x200, 0x201)."""
+
+    logging.info("COMMAND LISTENER: CP komutlarını dinliyor.")
+
+    while True:
+        try:
+            msg = bus.recv(timeout=1.0)
+
+            if msg:
+                # Sadece kontrol mesajlarına odaklan
+                if msg.arbitration_id == 0x200:
+                    logging.info(f"CAN KOMUT ALINDI: ID 0x{msg.arbitration_id:X} (RemoteStart)")
+                    logging.info(">>> AĞ TRAFİĞİ BAŞARILI: CP, Şarj Başlatma (0x200) komutunu iletti.")
+                elif msg.arbitration_id == 0x201:
+                    logging.info(f"CAN KOMUT ALINDI: ID 0x{msg.arbitration_id:X} (RemoteStop)")
+                    logging.info(">>> AĞ TRAFİĞİ BAŞARILI: CP, Şarj Durdurma (0x201) komutunu iletti.")
+
+
+        except KeyboardInterrupt:
+            logging.info("COMMAND LISTENER: Dinleme durduruldu.")
+            break
+        except Exception as e:
+            logging.error(f"Hata: {e}")
+            break
+
+# === 3. Ana Çalışma Fonksiyonu ===
+def main():
+    # Periyodik trafiği arka planda çalıştırmak için Thread kullan
+    sender_thread = threading.Thread(target=send_periodic_traffic)
+    sender_thread.daemon = True
+    sender_thread.start()
+
+    # Ana thread'de CP'den gelen komutları dinle
+    listen_for_cp_commands()
+
+if __name__ == '__main__':
+    main()
+
+
