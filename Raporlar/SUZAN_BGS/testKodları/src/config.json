@@ -1,0 +1,10 @@
+{
+  "charge_point_id": "CP-ANOM-01",
+  "currency": "EUR",
+  "baseline_price": 0.20,
+  "anomaly_prices": [0.20, 0.85, 0.18, 0.95, -0.30, 5.50],
+  "sleep_seconds": 1,
+  "min_normal_price": 0.05,
+  "max_normal_price": 1.50,
+  "log_file": "../logs/pricing_anomaly.log"
+}
