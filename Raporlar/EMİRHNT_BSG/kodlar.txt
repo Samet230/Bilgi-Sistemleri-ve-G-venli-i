@@ -1,0 +1,118 @@
+import datetime
+
+# --- YAPILANDIRMA ---
+# Yüksek Tarife: 08:00 - 22:00 arası
+# Düşük Tarife: 22:00 - 08:00 arası
+HIGH_TARIFF_RATE = 5.0  # Birim fiyat
+LOW_TARIFF_RATE = 2.0   # Birim fiyat
+
+class ChargingStation:
+    def __init__(self, station_id):
+        self.station_id = station_id
+        self.time_offset_hours = 0  # Saat manipülasyonu için offset (sapma)
+
+    def hack_clock(self, offset_hours):
+        """
+        Saldırganın cihaz saatini manipüle etmesini simüle eder.
+         Cihaz saati değiştirilir.
+        """
+        self.time_offset_hours = offset_hours
+        print(f"\n[!] DİKKAT: {self.station_id} istasyonunun saati {offset_hours} saat kaydırıldı! (Manipülasyon)")
+
+    def create_session_report(self, user_id, actual_server_time):
+        """
+        Şarj oturumu verisi oluşturur.
+        İstasyon, kendi 'yerel' (manipüle edilmiş olabilir) saatine göre rapor verir.
+        """
+        # İstasyonun yerel saati (Eğer hacklendiyse server saatinden farklı olur)
+        local_time = actual_server_time + datetime.timedelta(hours=self.time_offset_hours)
+        
+        # İstasyon kendi saatine göre tarifeyi belirler [cite: 13]
+        applied_tariff = "High" if 8 <= local_time.hour < 22 else "Low"
+        
+        return {
+            "station_id": self.station_id,
+            "user_id": user_id,
+            "local_time_reported": local_time,
+            "applied_tariff": applied_tariff
+        }
+
+class CentralServer:
+    def __init__(self):
+        self.audit_logs = []
+
+    def get_expected_tariff(self, server_time):
+        """Sunucu tarafındaki doğru tarife tablosu"""
+        return "High" if 8 <= server_time.hour < 22 else "Low"
+
+    def process_transaction(self, session_data, server_time):
+        """
+        İstasyondan gelen veriyi işler ve anomali kontrolü yapar.
+        [cite: 16] Enerji tüketimi ve faturalama verileri arasında tutarsızlık analizi.
+        """
+        station_id = session_data["station_id"]
+        user_id = session_data["user_id"]
+        local_time = session_data["local_time_reported"]
+        applied_tariff = session_data["applied_tariff"]
+        
+        # Beklenen gerçek tarife (Sunucu saatine göre)
+        expected_tariff = self.get_expected_tariff(server_time)
+        
+        # Zaman farkı kontrolü (Basit tolerans: +/- 5 dakika)
+        time_diff = abs((server_time - local_time).total_seconds())
+        
+        # --- LOG FORMATLAMA [cite: 23] ---
+        log_entry = (
+            f"ServerTime: {server_time.strftime('%Y-%m-%d %H:%M:%S')} | "
+            f"StationID: {station_id} | UserID: {user_id} | "
+            f"LocalTime: {local_time.strftime('%H:%M')} | "
+            f"Applied: {applied_tariff} | Expected: {expected_tariff}"
+        )
+
+        #  Tutarsızlık tespiti
+        if applied_tariff != expected_tariff or time_diff > 300: # 300 saniye = 5 dk tolerans
+            print(f"LOG: {log_entry} | Action: FLAGGED FOR AUDIT (ANOMALY)")
+            print(f"   >>> UYARI: Tarife Uyuşmazlığı veya Saat Sapması Tespit Edildi! [cite: 24]")
+            return False # İşlem şüpheli
+        else:
+            print(f"LOG: {log_entry} | Action: Approved")
+            return True # İşlem normal
+
+# --- SİMÜLASYON BAŞLIYOR ---
+
+def run_simulation():
+    print("--- ELEKTRİKLİ ARAÇ ŞARJ ANOMALİ SİMÜLASYONU [cite: 1] ---")
+    
+    server = CentralServer()
+    station = ChargingStation("ST-045")
+    user = "U-223"
+
+    # SENARYO 1: NORMAL DURUM [cite: 27]
+    # Gerçek saat: Akşam 18:30 (Yüksek Tarife)
+    current_real_time = datetime.datetime(2025, 11, 10, 18, 30, 0)
+    
+    print("\n--- Adım 1: Normal İşlem Testi ---")
+    session = station.create_session_report(user, current_real_time)
+    server.process_transaction(session, current_real_time)
+
+    # SENARYO 2: SALDIRI (SAAT MANİPÜLASYONU) [cite: 5, 12]
+    # Saldırgan saati 15 saat ileri alıyor (veya geceye denk gelecek şekilde değiştiriyor).
+    # Hedef: 18:30'u (Pahalı), sabah 03:30 (Ucuz) gibi göstermek.
+    # 18:30 + 9 saat = 03:30 (Ertesi gün)
+    
+    print("\n--- Adım 2: Saldırı Başlıyor (Cihaz Saati Manipülasyonu) ---")
+    station.hack_clock(offset_hours=9) 
+
+    # SENARYO 3: ANOMALİ TESPİTİ [cite: 28]
+    # Gerçek saat hala 18:35 civarı olsun (biraz zaman geçti)
+    current_real_time = datetime.datetime(2025, 11, 10, 18, 35, 0)
+    
+    print("\n--- Adım 3: Manipüle Edilmiş İşlem Gönderimi ---")
+    # İstasyon hacklendiği için saati 03:35 olarak raporlayacak ve Düşük Tarife uygulayacak
+    session_hacked = station.create_session_report(user, current_real_time)
+    
+    # Sunucu bunu işlerken yakalamalı
+    server.process_transaction(session_hacked, current_real_time)
+
+if __name__ == "__main__":
+    run_simulation()

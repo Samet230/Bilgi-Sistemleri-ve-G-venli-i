@@ -1,0 +1,79 @@
+import json
+from datetime import datetime
+
+# --- Ayarlar ---
+JSON_DOSYA_ADI = "sarj_loglari.json"
+MAX_ZAMAN_FARKI_DAKIKA = 15  # 15 dakikadan fazla fark şüphelidir
+
+def anomali_analizi_yap():
+    print(f"--- ANALİZ BAŞLIYOR: {JSON_DOSYA_ADI} ---\n")
+    
+    try:
+        with open(JSON_DOSYA_ADI, 'r', encoding='utf-8') as f:
+            loglar = json.load(f)
+    except FileNotFoundError:
+        print("Hata: JSON dosyası bulunamadı. Önce veri üretici kodunu çalıştırın.")
+        return
+
+    anomali_sayisi = 0
+    toplam_islem = len(loglar)
+
+    for log in loglar:
+        # 1. Verileri Ayıkla
+        server_time_str = log["time"]
+        details = log["details"]
+        station_id = details["station"]
+        user_id = details["user"]
+        
+        # Zaman formatlarını işle (ISO formatından datetime objesine çevir)
+        # Örnek Server Time: "2025-11-10T22:31:12+03:00"
+        server_dt = datetime.fromisoformat(server_time_str)
+        
+        # Cihaz saati JSON'da sadece "HH:MM" olarak saklanmıştı ("03:30" gibi)
+        local_time_str = details["local_device_time"]
+        local_hour, local_minute = map(int, local_time_str.split(":"))
+        
+        # Karşılaştırma için cihaz tarihini, sunucu tarihiyle aynı gün varsayıyoruz
+        # (Sadece saatin manipüle edildiği senaryosu)
+        local_dt = server_dt.replace(hour=local_hour, minute=local_minute, second=0)
+
+        # 2. Algılama Kuralı 1: Zaman Farkı Analizi [Kaynak: 17]
+        # "Sunucu saati ile cihaz saati arasında büyük fark oluşması"
+        zaman_farki_sn = abs((server_dt - local_dt).total_seconds())
+        zaman_farki_dk = zaman_farki_sn / 60
+
+        # 3. Algılama Kuralı 2: Tarife Tutarsızlığı [Kaynak: 16]
+        # "Enerji tüketimi ile faturalama verileri arasında tutarsızlık"
+        uygulanan = details["applied_tariff"]
+        beklenen = details["expected_tariff"]
+        
+        is_fraud = False
+        sebepler = []
+
+        # Kural kontrolleri
+        if zaman_farki_dk > MAX_ZAMAN_FARKI_DAKIKA:
+            is_fraud = True
+            sebepler.append(f"Zaman Senkronizasyon Hatası ({int(zaman_farki_dk)} dk fark)")
+        
+        if uygulanan != beklenen:
+            is_fraud = True
+            sebepler.append(f"Tarife Manipülasyonu (Uygulanan: {uygulanan}, Olması Gereken: {beklenen})")
+
+        # 4. Karar ve Tepki [Kaynak: 19]
+        if is_fraud:
+            anomali_sayisi += 1
+            print(f"🚨 [ALARM] İstasyon: {station_id} | Kullanıcı: {user_id}")
+            print(f"   Zaman: {server_time_str}")
+            print(f"   Tespit Edilen Sorunlar: {', '.join(sebepler)}")
+            print(f"   Aksiyon: Oturum incelemeye alındı ve faturalama durduruldu.")
+            print("-" * 50)
+            
+    # Sonuç Raporu
+    print(f"\n--- ANALİZ TAMAMLANDI ---")
+    print(f"Toplam İncelenen Kayıt: {toplam_islem}")
+    print(f"Tespit Edilen Anomali: {anomali_sayisi}")
+    basari_orani = (anomali_sayisi / toplam_islem) * 100
+    print(f"Anomali Oranı: %{basari_orani:.1f}")
+
+if __name__ == "__main__":
+    anomali_analizi_yap()
