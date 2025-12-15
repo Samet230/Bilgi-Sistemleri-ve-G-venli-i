@@ -1,0 +1,224 @@
+import datetime
+import uuid
+
+# Basit kullanıcı "veritabanı" (örnek)
+USER_DB = {
+    "U-223": {
+        "name": "Ali Yılmaz",
+        "plate": "34ABC123"
+    },
+    "U-224": {
+        "name": "Ayşe Demir",
+        "plate": "06XYZ789"
+    }
+}
+
+class ChargingStation:
+    def __init__(self, station_id):
+        self.station_id = station_id
+
+    def create_session_report(self, user_id, input_name, input_plate,
+                              start_time, duration_minutes, energy_kwh):
+        """
+        Şarj oturumu kaydı oluşturur.
+        - Kullanıcı yanlış isim / yanlış plaka girebilir.
+        - İstasyon bu bilgiyi olduğu gibi merkeze yollar (doğrulama yapmaz).
+        """
+        end_time = start_time + datetime.timedelta(minutes=duration_minutes)
+        session_id = str(uuid.uuid4())
+
+        session_data = {
+            "session_id": session_id,
+            "station_id": self.station_id,
+            "user_id": user_id,        # RFID / mobil uygulama ile gelen ID
+            "input_name": input_name,  # Kullanıcının girdiği isim
+            "input_plate": input_plate,# Kullanıcının girdiği plaka
+            "start_time": start_time,
+            "end_time": end_time,
+            "duration_min": duration_minutes,
+            "energy_kwh": energy_kwh
+        }
+        return session_data
+
+class CentralServer:
+    def __init__(self):
+        self.audit_logs = []
+        self.last_plate_usage = {}  # plaka: son kullanım zamanı
+
+    def validate_user_info(self, user_id, input_name, input_plate):
+        """
+        Kullanıcının girdiği isim ve plakanın, sistemde kayıtlı bilgilerle
+        uyumlu olup olmadığını kontrol eder.
+        """
+        if user_id not in USER_DB:
+            return False, "BİLİNMEYEN_KULLANICI_ID"
+
+        registered = USER_DB[user_id]
+        name_ok = (registered["name"].strip().lower() ==
+                   input_name.strip().lower())
+        plate_ok = (registered["plate"].replace(" ", "").upper() ==
+                    input_plate.replace(" ", "").upper())
+
+        if not name_ok and not plate_ok:
+            return False, "İSİM_VE_PLAKA_UYUŞMUYOR"
+        elif not name_ok:
+            return False, "İSİM_UYUŞMUYOR"
+        elif not plate_ok:
+            return False, "PLAKA_UYUŞMUYOR"
+        else:
+            return True, "OK"
+
+    def check_plate_usage_frequency(self, plate, start_time):
+        """
+        Aynı plaka çok kısa sürede tekrar kullanılmış mı?
+        (Örneğin 2 dakika içinde ikinci kez kayıt gibi)
+        """
+        plate_key = plate.replace(" ", "").upper()
+        last_time = self.last_plate_usage.get(plate_key)
+
+        if last_time is None:
+            self.last_plate_usage[plate_key] = start_time
+            return True, "OK"
+
+        diff_sec = (start_time - last_time).total_seconds()
+        if diff_sec < 120:  # 120 sn = 2 dakika
+            # Şüpheli: Aynı plaka ile çok sık kayıt
+            return False, "KISA_ARALIKLA_TEKRAR_PLAKA"
+        else:
+            self.last_plate_usage[plate_key] = start_time
+            return True, "OK"
+
+    def process_transaction(self, session_data):
+        """
+        İstasyondan gelen oturumu işler ve kayıt (input) hatalarına göre
+        anomali/uyarı üretir.
+        """
+        station_id = session_data["station_id"]
+        user_id = session_data["user_id"]
+        input_name = session_data["input_name"]
+        input_plate = session_data["input_plate"]
+        start_time = session_data["start_time"]
+        end_time = session_data["end_time"]
+        duration = session_data["duration_min"]
+        energy = session_data["energy_kwh"]
+        session_id = session_data["session_id"]
+
+        # 1) İsim / plaka – kullanıcı ID uyumluluk kontrolü
+        user_ok, user_msg = self.validate_user_info(user_id, input_name, input_plate)
+
+        # 2) Plakanın son kullanım zamanına göre tekrar kontrolü
+        plate_ok, plate_msg = self.check_plate_usage_frequency(input_plate, start_time)
+
+        # 3) Basit mantık kontrolü: süre ve enerji
+        logic_anomaly = False
+        if duration <= 0 or energy < 0:
+            logic_anomaly = True
+            logic_msg = "SÜRE_VEYA_ENERJİ_GEÇERSİZ"
+        else:
+            avg_power_kw = energy / (duration / 60.0)  # kW
+            if avg_power_kw < 0.1 or avg_power_kw > 350:
+                logic_anomaly = True
+                logic_msg = "MANTIKSIZ_GÜÇ_DEĞERİ"
+            else:
+                logic_msg = "OK"
+
+        # --- LOG OLUŞTURMA ---
+        log_entry = (
+            f"Time: {start_time.strftime('%Y-%m-%d %H:%M:%S')} | "
+            f"StationID: {station_id} | UserID: {user_id} | "
+            f"SessionID: {session_id[:8]}... | "
+            f"NameInput: '{input_name}' | PlateInput: '{input_plate}' | "
+            f"Dur: {duration} dk | Energy: {energy} kWh | "
+            f"UserCheck: {user_msg} | PlateFreq: {plate_msg} | "
+            f"Logic: {logic_msg}"
+        )
+
+        # --- KARAR ---
+        suspicious = False
+        reasons = []
+
+        if not user_ok:
+            suspicious = True
+            reasons.append(user_msg)
+
+        if not plate_ok:
+            suspicious = True
+            reasons.append(plate_msg)
+
+        if logic_anomaly:
+            suspicious = True
+            reasons.append(logic_msg)
+
+        if suspicious:
+            action = "FLAGGED_FOR_REVIEW"
+            print(f"LOG: {log_entry} | Action: {action} | NEDEN: {', '.join(reasons)}")
+        else:
+            action = "APPROVED"
+            print(f"LOG: {log_entry} | Action: {action}")
+
+        self.audit_logs.append((log_entry, action, reasons))
+        return not suspicious  # True = sorun yok, False = incelemeye alındı
+
+# --- SİMÜLASYON ---
+
+def run_simulation():
+    print("--- ELEKTRİKLİ ARAÇ ŞARJ KAYIT ANOMALİ SİMÜLASYONU ---")
+
+    server = CentralServer()
+    station = ChargingStation("ST-045")
+
+    # Senaryo 1: Her şey doğru (Ali, doğru plaka ile)
+    print("\n--- Senaryo 1: Doğru Kayıt ---")
+    t1 = datetime.datetime(2025, 11, 10, 18, 30, 0)
+    s1 = station.create_session_report(
+        user_id="U-223",
+        input_name="Ali Yılmaz",     # doğru
+        input_plate="34ABC123",      # doğru
+        start_time=t1,
+        duration_minutes=30,
+        energy_kwh=10
+    )
+    server.process_transaction(s1)
+
+    # Senaryo 2: Kullanıcı yanlış plaka giriyor
+    print("\n--- Senaryo 2: Yanlış Plaka ---")
+    t2 = datetime.datetime(2025, 11, 10, 19, 00, 0)
+    s2 = station.create_session_report(
+        user_id="U-223",
+        input_name="Ali Yılmaz",     # doğru isim
+        input_plate="34WRONG1",      # yanlış plaka
+        start_time=t2,
+        duration_minutes=40,
+        energy_kwh=15
+    )
+    server.process_transaction(s2)
+
+    # Senaryo 3: Kullanıcı yanlış isim yazıyor (başkasının ismi)
+    print("\n--- Senaryo 3: Yanlış İsim ---")
+    t3 = datetime.datetime(2025, 11, 10, 19, 30, 0)
+    s3 = station.create_session_report(
+        user_id="U-223",
+        input_name="Ayşe Demir",     # U-224'ün ismi
+        input_plate="34ABC123",      # plaka doğru
+        start_time=t3,
+        duration_minutes=20,
+        energy_kwh=7
+    )
+    server.process_transaction(s3)
+
+    # Senaryo 4: Aynı plaka ile çok kısa aralıkla tekrar kayıt
+    print("\n--- Senaryo 4: Kısa Aralıkla Tekrar Eden Plaka ---")
+    # t3'ten 1 dakika sonra aynı plaka
+    t4 = datetime.datetime(2025, 11, 10, 19, 31, 0)
+    s4 = station.create_session_report(
+        user_id="U-223",
+        input_name="Ali Yılmaz",
+        input_plate="34ABC123",
+        start_time=t4,
+        duration_minutes=10,
+        energy_kwh=3
+    )
+    server.process_transaction(s4)
+
+if __name__ == "__main__":
+    run_simulation()
