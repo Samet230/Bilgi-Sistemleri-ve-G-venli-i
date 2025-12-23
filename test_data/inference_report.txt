@@ -1,0 +1,47 @@
+INFERENCE TEST REPORT: NEW SYNTHETIC DATA
+=========================================
+
+TESTING MODEL: YOUSEF
+------------------------------
+  -> Test Samples: 8
+  -> Actual Anomalies: 3
+  -> DETECTED Anomalies: 0
+  -> Accuracy on New Data: 62.50%
+  -> RESULT: GOOD (Some mismatches due to new data patterns)
+
+
+TESTING MODEL: SAMET
+------------------------------
+  -> Test Samples: 7
+  -> Actual Anomalies: 2
+  -> DETECTED Anomalies: 0
+  -> Accuracy on New Data: 71.43%
+  -> RESULT: GOOD (Some mismatches due to new data patterns)
+
+
+TESTING MODEL: ATAKAN
+------------------------------
+  -> Test Samples: 8
+  -> Actual Anomalies: 3
+  -> DETECTED Anomalies: 3
+  -> Accuracy on New Data: 100.00%
+  -> RESULT: PERFECT DETECTION 🚀
+
+
+TESTING MODEL: EMİRHAN
+------------------------------
+  -> Test Samples: 4
+  -> Actual Anomalies: 2
+  -> DETECTED Anomalies: 0
+  -> Accuracy on New Data: 50.00%
+  -> RESULT: GOOD (Some mismatches due to new data patterns)
+
+
+TESTING MODEL: İBRAHİM
+------------------------------
+  -> Test Samples: 2
+  -> Actual Anomalies: 1
+  -> DETECTED Anomalies: 1
+  -> Accuracy on New Data: 100.00%
+  -> RESULT: PERFECT DETECTION 🚀
+

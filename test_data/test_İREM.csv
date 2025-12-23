@@ -1,0 +1,6 @@
+length,protocol_ip,protocol_can,can_id_anomaly,label,timestamp
+64,1,0,0,0,0
+8,0,1,1,1,0
+2,0,1,1,1,0
+128,0,1,1,1,0
+0,0,1,1,1,0

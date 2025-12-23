@@ -1,0 +1,18 @@
+timestamp,load_kw,attack_type,label,source,event_type,unit,log_level
+2025-12-23 14:44:33.793574,3.6866159325556427,NULL,0,grid_monitor,grid_monitor,grid_monitor,grid_monitor
+2025-12-23 14:44:33.793574,3.949130390684484,NULL,0,grid_monitor,grid_monitor,grid_monitor,grid_monitor
+2025-12-23 14:44:33.794244,7.348271107124289,NULL,0,grid_monitor,grid_monitor,grid_monitor,grid_monitor
+2025-12-23 14:44:33.794244,6.4704599351141,NULL,0,grid_monitor,grid_monitor,grid_monitor,grid_monitor
+2025-12-23 14:44:33.794244,7.552406263523739,NULL,0,grid_monitor,grid_monitor,grid_monitor,grid_monitor
+2025-12-23 14:44:33.794244,4.9182823108002,NULL,0,grid_monitor,grid_monitor,grid_monitor,grid_monitor
+2025-12-23 14:44:33.794244,7.877567208204441,NULL,0,grid_monitor,grid_monitor,grid_monitor,grid_monitor
+2025-12-23 14:44:33.794244,4.478998508019291,NULL,0,grid_monitor,grid_monitor,grid_monitor,grid_monitor
+2025-12-23 14:44:33.794244,6.682168214899312,NULL,0,grid_monitor,grid_monitor,grid_monitor,grid_monitor
+2025-12-23 14:44:33.794244,5.670655354410143,NULL,0,grid_monitor,grid_monitor,grid_monitor,grid_monitor
+2025-12-23 14:44:33.794244,15.5,LOAD_MANIPULATION,1,grid_monitor,grid_monitor,grid_monitor,grid_monitor
+2025-12-23 14:44:33.794244,22.0,LOAD_MANIPULATION,1,grid_monitor,grid_monitor,grid_monitor,grid_monitor
+2025-12-23 14:44:33.794244,45.1,LOAD_MANIPULATION,1,grid_monitor,grid_monitor,grid_monitor,grid_monitor
+2025-12-23 14:44:33.794244,0.1,LOAD_MANIPULATION,1,grid_monitor,grid_monitor,grid_monitor,grid_monitor
+2025-12-23 14:44:33.794244,99.9,LOAD_MANIPULATION,1,grid_monitor,grid_monitor,grid_monitor,grid_monitor
+2025-12-23 14:44:33.794244,12.5,LOAD_MANIPULATION,1,grid_monitor,grid_monitor,grid_monitor,grid_monitor
+2025-12-23 14:44:33.794244,18.2,LOAD_MANIPULATION,1,grid_monitor,grid_monitor,grid_monitor,grid_monitor

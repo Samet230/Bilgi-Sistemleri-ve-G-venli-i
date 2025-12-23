@@ -1,0 +1,78 @@
+INFERENCE TEST REPORT: ROBUST NLP MODELS
+========================================
+
+TESTING NLP MODEL: YOUSEF
+------------------------------
+  -> Samples: 8
+  -> Actual Anomalies: 3
+  -> DETECTED Anomalies: 0
+  -> Accuracy: 62.50%
+  -> RESULT: STILL NEEDS TUNING ⚠️
+
+
+TESTING NLP MODEL: SAMET
+------------------------------
+  -> Samples: 7
+  -> Actual Anomalies: 2
+  -> DETECTED Anomalies: 7
+  -> Accuracy: 28.57%
+  -> RESULT: STILL NEEDS TUNING ⚠️
+
+
+TESTING NLP MODEL: ATAKAN
+------------------------------
+  -> Samples: 8
+  -> Actual Anomalies: 3
+  -> DETECTED Anomalies: 4
+  -> Accuracy: 87.50%
+  -> RESULT: SIGNIFICANT IMPROVEMENT ✅
+
+
+TESTING NLP MODEL: EMİRHAN
+------------------------------
+  -> Samples: 4
+  -> Actual Anomalies: 2
+  -> DETECTED Anomalies: 2
+  -> Accuracy: 100.00%
+  -> RESULT: PERFECT DETECTION 🚀
+
+
+TESTING NLP MODEL: İBRAHİM
+------------------------------
+  -> Samples: 2
+  -> Actual Anomalies: 1
+  -> DETECTED Anomalies: 1
+  -> Accuracy: 100.00%
+  -> RESULT: PERFECT DETECTION 🚀
+
+
+TESTING NLP MODEL: SUZAN
+------------------------------
+  -> Samples: 2
+  -> Actual Anomalies: 1
+  -> DETECTED Anomalies: 2
+  -> Accuracy: 50.00%
+  -> RESULT: STILL NEEDS TUNING ⚠️
+
+
+TESTING NLP MODEL: İREM
+------------------------------
+  -> ERROR: unsupported operand type(s) for +: 'int' and 'str'
+
+TESTING NLP MODEL: MİRAÇ
+------------------------------
+  -> Samples: 2
+  -> Actual Anomalies: 1
+  -> DETECTED Anomalies: 2
+  -> Accuracy: 50.00%
+  -> RESULT: STILL NEEDS TUNING ⚠️
+
+
+TESTING NLP MODEL: EMİRHNT
+------------------------------
+  -> Samples: 2
+  -> Actual Anomalies: 1
+  -> DETECTED Anomalies: 1
+  -> Accuracy: 100.00%
+  -> RESULT: PERFECT DETECTION 🚀
+

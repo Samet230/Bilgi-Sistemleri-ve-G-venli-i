@@ -1,0 +1,5 @@
+Durum,Tuketim_kWh,label,UygulananTarife,OlmasiGerekenTarife
+Normal,5,0,1,1
+MISMATCH_FOUND,5,1,2,1
+CRITICAL_OVERCHARGE,100,1,50,10
+TARIFF_MANIPULATION,0,1,10,0

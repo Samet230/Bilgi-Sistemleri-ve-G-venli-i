@@ -1,0 +1,118 @@
+🛡️ ENSEMBLE SYSTEM: FINAL COMPREHENSIVE TEST & DEBUG REPORT
+============================================================
+Ideally achieving 100% accuracy due to 'Voting Mechanism'.
+
+🧪 TESTING ANOMALY: YOUSEF
+------------------------------
+  [✅ TP (Caught Attack)] Log #5
+    -> Council: RF: 🔴 SALDIRI (%100.0%) | GBM: 🔴 SALDIRI (%100.0%) | ET: 🔴 SALDIRI (%100.0%)
+    -> Final: SALDIRI (Conf: 100.0%)
+
+  -> Accuracy: 100.00%
+  -> RESULT: PERFECT 🚀
+
+
+🧪 TESTING ANOMALY: SAMET
+------------------------------
+  [✅ TP (Caught Attack)] Log #5
+    -> Council: RF: 🔴 SALDIRI (%100.0%) | GBM: 🔴 SALDIRI (%97.6%) | ET: 🔴 SALDIRI (%100.0%)
+    -> Final: SALDIRI (Conf: 99.2%)
+  [❌ FN (Missed Attack)] Log #9
+    -> Council: RF: 🟢 NORMAL (%21.0%) | GBM: 🟢 NORMAL (%12.7%) | ET: 🟢 NORMAL (%18.0%)
+    -> Final: NORMAL (Conf: 82.8%)
+  [❌ FN (Missed Attack)] Log #10
+    -> Council: RF: 🟢 NORMAL (%37.0%) | GBM: 🟢 NORMAL (%21.2%) | ET: 🟢 NORMAL (%38.0%)
+    -> Final: NORMAL (Conf: 67.9%)
+
+  -> Accuracy: 83.33%
+  -> RESULT: NEEDS ATTENTION ⚠️
+
+
+🧪 TESTING ANOMALY: EMİRHAN
+------------------------------
+  [✅ TP (Caught Attack)] Log #2
+    -> Council: RF: 🔴 SALDIRI (%100.0%) | GBM: 🔴 SALDIRI (%97.5%) | ET: 🔴 SALDIRI (%100.0%)
+    -> Final: SALDIRI (Conf: 99.2%)
+
+  -> Accuracy: 100.00%
+  -> RESULT: PERFECT 🚀
+
+
+🧪 TESTING ANOMALY: ATAKAN
+------------------------------
+  [✅ TP (Caught Attack)] Log #10
+    -> Council: RF: 🔴 SALDIRI (%100.0%) | GBM: 🔴 SALDIRI (%100.0%) | ET: 🔴 SALDIRI (%100.0%)
+    -> Final: SALDIRI (Conf: 100.0%)
+
+  -> Accuracy: 100.00%
+  -> RESULT: PERFECT 🚀
+
+
+🧪 TESTING ANOMALY: İBRAHİM
+------------------------------
+  [⚠️ FP (False Alarm)] Log #0
+    -> Council: RF: 🔴 SALDIRI (%55.0%) | GBM: 🟢 NORMAL (%0.7%) | ET: 🔴 SALDIRI (%62.0%)
+    -> Final: SALDIRI (Conf: 39.2%)
+  [✅ TP (Caught Attack)] Log #1
+    -> Council: RF: 🔴 SALDIRI (%100.0%) | GBM: 🔴 SALDIRI (%99.9%) | ET: 🔴 SALDIRI (%100.0%)
+    -> Final: SALDIRI (Conf: 100.0%)
+
+  -> Accuracy: 80.00%
+  -> RESULT: NEEDS ATTENTION ⚠️
+
+
+🧪 TESTING ANOMALY: SUZAN
+------------------------------
+  [✅ TP (Caught Attack)] Log #1
+    -> Council: RF: 🔴 SALDIRI (%93.0%) | GBM: 🔴 SALDIRI (%99.9%) | ET: 🔴 SALDIRI (%97.0%)
+    -> Final: SALDIRI (Conf: 96.6%)
+
+  -> Accuracy: 100.00%
+  -> RESULT: PERFECT 🚀
+
+
+🧪 TESTING ANOMALY: İREM
+------------------------------
+  [✅ TP (Caught Attack)] Log #1
+    -> Council: RF: 🔴 SALDIRI (%100.0%) | GBM: 🔴 SALDIRI (%99.3%) | ET: 🔴 SALDIRI (%100.0%)
+    -> Final: SALDIRI (Conf: 99.8%)
+
+  -> Accuracy: 100.00%
+  -> RESULT: PERFECT 🚀
+
+
+🧪 TESTING ANOMALY: MİRAÇ
+------------------------------
+  [✅ TP (Caught Attack)] Log #1
+    -> Council: RF: 🔴 SALDIRI (%94.0%) | GBM: 🔴 SALDIRI (%99.3%) | ET: 🔴 SALDIRI (%94.0%)
+    -> Final: SALDIRI (Conf: 95.8%)
+  [❌ FN (Missed Attack)] Log #4
+    -> Council: RF: 🟢 NORMAL (%31.0%) | GBM: 🟢 NORMAL (%1.8%) | ET: 🟢 NORMAL (%29.0%)
+    -> Final: NORMAL (Conf: 79.4%)
+
+  -> Accuracy: 80.00%
+  -> RESULT: NEEDS ATTENTION ⚠️
+
+
+🧪 TESTING ANOMALY: EMİRHNT
+------------------------------
+  [✅ TP (Caught Attack)] Log #1
+    -> Council: RF: 🔴 SALDIRI (%58.0%) | GBM: 🔴 SALDIRI (%100.0%) | ET: 🔴 SALDIRI (%78.0%)
+    -> Final: SALDIRI (Conf: 78.7%)
+
+  -> Accuracy: 100.00%
+  -> RESULT: PERFECT 🚀
+
+
+🧪 TESTING ANOMALY: ALİ
+------------------------------
+  [✅ TP (Caught Attack)] Log #3
+    -> Council: RF: 🔴 SALDIRI (%95.0%) | GBM: 🔴 SALDIRI (%100.0%) | ET: 🔴 SALDIRI (%97.0%)
+    -> Final: SALDIRI (Conf: 97.3%)
+
+  -> Accuracy: 100.00%
+  -> RESULT: PERFECT 🚀
+
+
+============================================================
+SUMMARY: 7/10 Datasets Passed with High Accuracy.

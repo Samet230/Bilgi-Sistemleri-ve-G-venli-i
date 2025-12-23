@@ -1,0 +1,150 @@
+TRAINING REPORT: RANDOM FOREST MODELS
+=====================================
+
+TRAINING MODEL FOR: YOUSEF (OCPP_Security)
+--------------------------------------------------
+  - Dropped High-Cardinality Cols: ['timestamp']
+  - Model Saved: c:\Users\smt1s\OneDrive\Belgeler\GitHub\Bilgi-Sistemleri-ve-G-venli-i\models\rf_model_YOUSEF.joblib
+  - Accuracy: 1.0000
+  - Classification Report:
+              precision    recall  f1-score   support
+
+           0       1.00      1.00      1.00      1980
+           1       1.00      1.00      1.00       604
+
+    accuracy                           1.00      2584
+   macro avg       1.00      1.00      1.00      2584
+weighted avg       1.00      1.00      1.00      2584
+
+
+
+TRAINING MODEL FOR: SUZAN (Energy_Fraud)
+--------------------------------------------------
+  - Model Saved: c:\Users\smt1s\OneDrive\Belgeler\GitHub\Bilgi-Sistemleri-ve-G-venli-i\models\rf_model_SUZAN.joblib
+  - Accuracy: 1.0000
+  - Classification Report:
+              precision    recall  f1-score   support
+
+           0       1.00      1.00      1.00       118
+           1       1.00      1.00      1.00        82
+
+    accuracy                           1.00       200
+   macro avg       1.00      1.00      1.00       200
+weighted avg       1.00      1.00      1.00       200
+
+
+
+TRAINING MODEL FOR: MİRAÇ (Registration_Anomaly)
+--------------------------------------------------
+  - Model Saved: c:\Users\smt1s\OneDrive\Belgeler\GitHub\Bilgi-Sistemleri-ve-G-venli-i\models\rf_model_MİRAÇ.joblib
+  - Accuracy: 1.0000
+  - Classification Report:
+              precision    recall  f1-score   support
+
+           0       1.00      1.00      1.00        13
+           1       1.00      1.00      1.00         8
+
+    accuracy                           1.00        21
+   macro avg       1.00      1.00      1.00        21
+weighted avg       1.00      1.00      1.00        21
+
+
+
+TRAINING MODEL FOR: İREM (CAN_Bus_Network)
+--------------------------------------------------
+  - Model Saved: c:\Users\smt1s\OneDrive\Belgeler\GitHub\Bilgi-Sistemleri-ve-G-venli-i\models\rf_model_İREM.joblib
+  - Accuracy: 0.9744
+  - Classification Report:
+              precision    recall  f1-score   support
+
+           0       0.67      0.60      0.63        10
+           1       0.98      1.00      0.99       297
+           2       1.00      0.40      0.57         5
+
+    accuracy                           0.97       312
+   macro avg       0.88      0.67      0.73       312
+weighted avg       0.97      0.97      0.97       312
+
+
+
+TRAINING MODEL FOR: EMİRHAN (K8s_Security)
+--------------------------------------------------
+  - Dropped High-Cardinality Cols: ['timestamp', 'source_ip', 'dest_ip']
+  - Model Saved: c:\Users\smt1s\OneDrive\Belgeler\GitHub\Bilgi-Sistemleri-ve-G-venli-i\models\rf_model_EMİRHAN.joblib
+  - Accuracy: 1.0000
+  - Classification Report:
+              precision    recall  f1-score   support
+
+           0       1.00      1.00      1.00       826
+           1       1.00      1.00      1.00       174
+
+    accuracy                           1.00      1000
+   macro avg       1.00      1.00      1.00      1000
+weighted avg       1.00      1.00      1.00      1000
+
+
+
+TRAINING MODEL FOR: SAMET (IDS_IPS)
+--------------------------------------------------
+  - Model Saved: c:\Users\smt1s\OneDrive\Belgeler\GitHub\Bilgi-Sistemleri-ve-G-venli-i\models\rf_model_SAMET.joblib
+  - Accuracy: 1.0000
+  - Classification Report:
+              precision    recall  f1-score   support
+
+           0       1.00      1.00      1.00       641
+           1       1.00      1.00      1.00       281
+
+    accuracy                           1.00       922
+   macro avg       1.00      1.00      1.00       922
+weighted avg       1.00      1.00      1.00       922
+
+
+
+TRAINING MODEL FOR: EMİRHNT (Time_Drift_Billing)
+--------------------------------------------------
+  - Model Saved: c:\Users\smt1s\OneDrive\Belgeler\GitHub\Bilgi-Sistemleri-ve-G-venli-i\models\rf_model_EMİRHNT.joblib
+  - Accuracy: 1.0000
+  - Classification Report:
+              precision    recall  f1-score   support
+
+           0       1.00      1.00      1.00       174
+           1       1.00      1.00      1.00        26
+
+    accuracy                           1.00       200
+   macro avg       1.00      1.00      1.00       200
+weighted avg       1.00      1.00      1.00       200
+
+
+
+TRAINING MODEL FOR: İBRAHİM (System_Time_Anomaly)
+--------------------------------------------------
+  - Model Saved: c:\Users\smt1s\OneDrive\Belgeler\GitHub\Bilgi-Sistemleri-ve-G-venli-i\models\rf_model_İBRAHİM.joblib
+  - Accuracy: 1.0000
+  - Classification Report:
+              precision    recall  f1-score   support
+
+           0       1.00      1.00      1.00       252
+           1       1.00      1.00      1.00         2
+
+    accuracy                           1.00       254
+   macro avg       1.00      1.00      1.00       254
+weighted avg       1.00      1.00      1.00       254
+
+
+
+TRAINING MODEL FOR: ATAKAN (Load_Manipulation)
+--------------------------------------------------
+  - Model Saved: c:\Users\smt1s\OneDrive\Belgeler\GitHub\Bilgi-Sistemleri-ve-G-venli-i\models\rf_model_ATAKAN.joblib
+  - Accuracy: 1.0000
+  - Classification Report:
+              precision    recall  f1-score   support
+
+           0       1.00      1.00      1.00       175
+           1       1.00      1.00      1.00        25
+
+    accuracy                           1.00       200
+   macro avg       1.00      1.00      1.00       200
+weighted avg       1.00      1.00      1.00       200
+
+
+

@@ -1,0 +1,29 @@
+NLP MODEL TRAINING REPORT
+=========================
+
+Training YOUSEF...
+  -> Model Saved: c:\Users\smt1s\OneDrive\Belgeler\GitHub\Bilgi-Sistemleri-ve-G-venli-i\models\nlp_model_YOUSEF.joblib | Accuracy: 0.7779 | Features: Text=1 Num=1
+
+Training SAMET...
+  -> Model Saved: c:\Users\smt1s\OneDrive\Belgeler\GitHub\Bilgi-Sistemleri-ve-G-venli-i\models\nlp_model_SAMET.joblib | Accuracy: 1.0000 | Features: Text=1 Num=0
+
+Training EMİRHAN...
+  -> Model Saved: c:\Users\smt1s\OneDrive\Belgeler\GitHub\Bilgi-Sistemleri-ve-G-venli-i\models\nlp_model_EMİRHAN.joblib | Accuracy: 1.0000 | Features: Text=1 Num=0
+
+Training ATAKAN...
+  -> Model Saved: c:\Users\smt1s\OneDrive\Belgeler\GitHub\Bilgi-Sistemleri-ve-G-venli-i\models\nlp_model_ATAKAN.joblib | Accuracy: 1.0000 | Features: Text=0 Num=1
+
+Training İBRAHİM...
+  -> Model Saved: c:\Users\smt1s\OneDrive\Belgeler\GitHub\Bilgi-Sistemleri-ve-G-venli-i\models\nlp_model_İBRAHİM.joblib | Accuracy: 1.0000 | Features: Text=1 Num=0
+
+Training SUZAN...
+  -> Model Saved: c:\Users\smt1s\OneDrive\Belgeler\GitHub\Bilgi-Sistemleri-ve-G-venli-i\models\nlp_model_SUZAN.joblib | Accuracy: 1.0000 | Features: Text=1 Num=3
+
+Training İREM...
+  -> Model Saved: c:\Users\smt1s\OneDrive\Belgeler\GitHub\Bilgi-Sistemleri-ve-G-venli-i\models\nlp_model_İREM.joblib | Accuracy: 0.9519 | Features: Text=0 Num=6
+
+Training EMİRHNT...
+  -> Model Saved: c:\Users\smt1s\OneDrive\Belgeler\GitHub\Bilgi-Sistemleri-ve-G-venli-i\models\nlp_model_EMİRHNT.joblib | Accuracy: 1.0000 | Features: Text=1 Num=3
+
+Training MİRAÇ...
+  -> Model Saved: c:\Users\smt1s\OneDrive\Belgeler\GitHub\Bilgi-Sistemleri-ve-G-venli-i\models\nlp_model_MİRAÇ.joblib | Accuracy: 1.0000 | Features: Text=3 Num=3

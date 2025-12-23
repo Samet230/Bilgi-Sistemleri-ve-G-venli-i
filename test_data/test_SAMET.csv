@@ -1,0 +1,13 @@
+timestamp,level,detail,action,id,label,severity
+2025-12-23 14:44:33.782254,NORMAL,Traffic Flow OK,OK,0,0,High
+2025-12-23 14:44:33.782254,NORMAL,Traffic Flow OK,OK,1,0,High
+2025-12-23 14:44:33.782254,NORMAL,Traffic Flow OK,OK,2,0,High
+2025-12-23 14:44:33.782254,NORMAL,Traffic Flow OK,OK,3,0,High
+2025-12-23 14:44:33.782254,NORMAL,Traffic Flow OK,OK,4,0,High
+2025-12-23 14:44:33.782254,SALDIRI,Yan Hareket / Ağ Keşfi (Nmap Scan),Bloklandı,1000,1,High
+2025-12-23 14:44:33.782254,SALDIRI,Firmware Enjeksiyonu Denemesi,Bloklandı,1001,1,High
+2025-12-23 14:44:33.782254,SALDIRI,Ters Bağlantı (Reverse Shell) Tespit Edildi,Bloklandı,1002,1,High
+2025-12-23 14:44:33.782254,SALDIRI,Brute Force: SSH root login attempt,Bloklandı,1003,1,High
+2025-12-23 14:44:33.782254,SALDIRI,Veri Sızıntısı: FTP üzerinden toplu paket çıkışı,Bloklandı,1004,1,High
+2025-12-23 14:44:33.782254,SALDIRI,Ransomware Signatıre: .encrypted extension write,Bloklandı,1005,1,High
+2025-12-23 14:44:33.782254,SALDIRI,DDoS Attack: SYN Flood from multiple sources,Bloklandı,1006,1,High
