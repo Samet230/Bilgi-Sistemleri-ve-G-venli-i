@@ -6,7 +6,7 @@ import Sidebar from "@/components/Sidebar";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "LogIz Ensemble AI - Standalone IDS Dashboard",
+  title: "Anomi AI - İleri Seviye Tehdit Tespit Sistemi",
   description: "Advanced anomaly detection powered by Ensemble Machine Learning",
 };
 
@@ -16,8 +16,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="tr" className="dark">
-      <body className={`${inter.className} bg-background text-foreground antialiased`}>
+    <html lang="tr" className="dark" suppressHydrationWarning>
+      <body className={`${inter.className} bg-background text-foreground antialiased`} suppressHydrationWarning>
         <div className="flex min-h-screen relative overflow-hidden">
           {/* Ambient Background Elements */}
           <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-primary/5 rounded-full blur-[120px] pointer-events-none" />

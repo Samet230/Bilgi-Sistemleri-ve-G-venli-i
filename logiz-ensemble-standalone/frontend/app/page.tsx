@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useMemo } from 'react'
 import {
   ShieldAlert,
   Activity,
@@ -14,6 +14,7 @@ import {
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import axios from 'axios'
+import { TrafficChart } from '@/components/Charts'
 
 const API_BASE = "http://localhost:5050"
 
@@ -51,7 +52,7 @@ interface Alert {
 }
 
 export default function DashboardPage() {
-  const [stats, setStats] = useState({ totalLogs: 0, attacks: 0, normal: 0 })
+  const [stats, setStats] = useState({ totalLogs: 0, attacks: 0, normal: 0, trafficTrend: [] })
   const [alerts, setAlerts] = useState<Alert[]>([])
   const [loading, setLoading] = useState(true)
 
@@ -65,7 +66,8 @@ export default function DashboardPage() {
       setStats({
         totalLogs: data.total_logs,
         attacks: data.total_attacks,
-        normal: data.total_logs - data.total_attacks
+        normal: data.total_logs - data.total_attacks,
+        trafficTrend: data.traffic_trend || []
       })
 
       setAlerts(data.recent_alerts)
@@ -79,6 +81,15 @@ export default function DashboardPage() {
   useEffect(() => {
     fetchData()
   }, [])
+
+  // Use real traffic trend data from backend
+  const chartData = useMemo(() => {
+    if (stats.trafficTrend && stats.trafficTrend.length > 0) {
+      return stats.trafficTrend
+    }
+    // Fallback only if no data
+    return []
+  }, [stats.trafficTrend])
 
   return (
     <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
@@ -138,14 +149,17 @@ export default function DashboardPage() {
 
       {/* Main Content Areas */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {/* Placeholder for Charts */}
-        <div className="lg:col-span-2 glass-card rounded-3xl p-8 h-[400px] flex flex-col items-center justify-center text-center space-y-4 border-dashed">
-          <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center text-muted-foreground">
-            <TrendingUp size={32} />
+        {/* Traffic Trend Chart */}
+        <div className="lg:col-span-2 glass-card rounded-3xl p-6">
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="font-bold flex items-center gap-2">
+              <TrendingUp size={18} className="text-primary" />
+              Trafik Trendi
+            </h3>
+            <span className="text-xs text-muted-foreground">Son 24 Saat</span>
           </div>
-          <div>
-            <h3 className="text-xl font-bold text-muted-foreground">Trafik Trendi</h3>
-            <p className="text-sm text-muted-foreground opacity-60">Recharts entegre edilecek...</p>
+          <div className="h-[320px]">
+            <TrafficChart data={chartData} loading={loading} />
           </div>
         </div>
 

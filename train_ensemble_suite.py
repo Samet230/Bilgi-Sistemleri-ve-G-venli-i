@@ -43,7 +43,7 @@ DATASETS = [
     },
     {
         "name": "ATAKAN",
-        "path": r"Raporlar\ATAKAN_BSG\AtakanAkyol-Yuk-Verisi-Manupilasyonu-Anomalisi-99af48c\expanded_logs.csv",
+        "path": r"Raporlar\ATAKAN_BSG\AtakanAkyol_BSG\expanded_logs.csv",
         "target": "label",
         "features_text": [],
         "features_num": ["load_kw"]

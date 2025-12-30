@@ -1,0 +1,51 @@
+﻿======================================================================
+python : Traceback (m
+ost recent call last)
+:
+At line:1 char:1
++ python generate_att
+ack_report.py 2>&1 | 
+Out-File -FilePath at
+tack_rep ...
++ ~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~
+    + CategoryInfo   
+           : NotSpe  
+  cified: (Traceba   
+ ck (most recent     
+call last)::Stri    n
+g) [], RemoteEx    ce
+ption
+    + FullyQualified 
+   ErrorId : Native  
+  CommandError
+ 
+  File "C:\Users\smt1
+s\OneDrive\Belgeler\G
+itHub\Bilgi-Sistemler
+i-ve-G-venli-i\genera
+te_attack_report.py",
+ line 92, in <module>
+    print("\U0001f4ca
+ SALDIRI T¦P¦ ANAL¦Z 
+RAPORU")
+  File "C:\Users\smt1
+s\AppData\Local\Progr
+ams\Python\Python312\
+Lib\encodings\cp1254.
+py", line 19, in enco
+de
+    return codecs.cha
+rmap_encode(input,sel
+f.errors,encoding_tab
+le)[0]
+           ^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^
+^^^
+UnicodeEncodeError: '
+charmap' codec can't 
+encode character '\U0
+001f4ca' in position 
+0: character maps to 
+<undefined>

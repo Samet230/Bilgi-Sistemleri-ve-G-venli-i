@@ -1,9 +1,11 @@
 "use client"
 
 import React, { useState, useEffect } from 'react'
-import { FileText, Search, Calendar, Filter, X, ShieldAlert, CheckCircle2, Cpu, RefreshCw } from 'lucide-react'
+import { FileText, Search, Calendar, Filter, X, ShieldAlert, CheckCircle2, Cpu, RefreshCw, Download, FileDown } from 'lucide-react'
 import { cn, formatDate } from '@/lib/utils'
 import axios from 'axios'
+import jsPDF from 'jspdf'
+import autoTable from 'jspdf-autotable'
 
 const API_BASE = "http://localhost:5050"
 
@@ -95,6 +97,177 @@ export default function ReportsPage() {
         }
     }
 
+    // Helper to load font from URL
+    const loadFont = async (url: string): Promise<string> => {
+        const response = await fetch(url)
+        const buffer = await response.arrayBuffer()
+        return arrayBufferToBase64(buffer)
+    }
+
+    const arrayBufferToBase64 = (buffer: ArrayBuffer): string => {
+        let binary = ''
+        const bytes = new Uint8Array(buffer)
+        const len = bytes.byteLength
+        for (let i = 0; i < len; i++) {
+            binary += String.fromCharCode(bytes[i])
+        }
+        return window.btoa(binary)
+    }
+
+    // Generate Professional PDF Report with Turkish Support
+    const generatePDF = async (job: Job) => {
+        try {
+            // Fetch attack details
+            const response = await axios.get(`${API_BASE}/api/analyze/results/${job.job_id}`)
+            const jobAttacks: Attack[] = response.data.attacks || []
+
+            // Initialize PDF
+            const doc = new jsPDF()
+
+            // Load local Roboto font (supports Turkish characters)
+            try {
+                const fontResponse = await fetch('/roboto.ttf')
+                const fontBuffer = await fontResponse.arrayBuffer()
+                const fontBase64 = btoa(
+                    new Uint8Array(fontBuffer).reduce((data, byte) => data + String.fromCharCode(byte), '')
+                )
+                doc.addFileToVFS('Roboto-Regular.ttf', fontBase64)
+                doc.addFont('Roboto-Regular.ttf', 'Roboto', 'normal')
+                doc.setFont('Roboto')
+            } catch (fontError) {
+                console.warn('Could not load Roboto font, using Helvetica as fallback:', fontError)
+                doc.setFont('helvetica')
+            }
+
+            // --- DESIGN & LAYOUT ---
+
+            // 1. Branding Header
+            doc.setFillColor(30, 41, 59) // Dark Slate
+            doc.rect(0, 0, 210, 40, 'F')
+
+            doc.setFontSize(24)
+            doc.setTextColor(255, 255, 255)
+            doc.text('Anomi AI', 14, 20)
+
+            doc.setFontSize(10)
+            doc.setTextColor(148, 163, 184)
+            doc.text('Gelişmiş Anomali Tespit Raporu', 14, 28)
+
+            doc.text(new Date().toLocaleDateString('tr-TR', { day: 'numeric', month: 'long', year: 'numeric' }), 195, 20, { align: 'right' })
+
+            // 2. Job Summary Card
+            const startY = 55
+
+            // Left Column (File Info)
+            doc.setFontSize(12)
+            doc.setTextColor(30, 41, 59)
+            doc.setFont('Roboto', 'normal')
+            doc.text('Analiz Özeti', 14, startY)
+
+            doc.setFontSize(10)
+            doc.setTextColor(71, 85, 105)
+            doc.setFontSize(10)
+            doc.setTextColor(71, 85, 105)
+
+            doc.text('Dosya Adı:', 14, startY + 8)
+            doc.setTextColor(0)
+            doc.text(job.filename, 40, startY + 8)
+
+            doc.setTextColor(71, 85, 105)
+            doc.text('İşlem ID:', 14, startY + 14)
+            doc.setTextColor(0)
+            doc.text(job.job_id, 40, startY + 14)
+
+            // Right Column (Stats)
+            const rightColX = 120
+            doc.setFillColor(241, 245, 249) // Light Gray Bg
+            doc.roundedRect(rightColX - 5, startY - 5, 80, 25, 3, 3, 'F')
+
+            doc.setFontSize(9)
+            doc.setTextColor(100)
+            doc.text('TOPLAM KAYIT', rightColX, startY)
+            doc.setFontSize(14)
+            doc.setTextColor(30, 41, 59)
+            doc.text(job.total_records.toString(), rightColX, startY + 7)
+
+            doc.setFontSize(9)
+            doc.setTextColor(100)
+            doc.text('TESPİT EDİLEN TEHDİT', rightColX + 40, startY)
+            doc.setFontSize(14)
+            doc.setTextColor(220, 38, 38) // Red for attacks
+            doc.text(job.attacks_detected.toString(), rightColX + 40, startY + 7)
+
+            // 3. Detailed Findings Table
+            doc.setFontSize(12)
+            doc.setTextColor(30, 41, 59)
+            doc.text('Tespit Edilen Tehditler ve Anormallikler', 14, startY + 40)
+
+            if (jobAttacks.length > 0) {
+                const tableBody = jobAttacks.map((attack, idx) => [
+                    (idx + 1).toString(),
+                    attack.attack_type || 'Şarj İstasyonu Anomalisi',
+                    `%${(attack.probability * 100).toFixed(1)}`,
+                    attack.winning_model || 'ENSEMBLE',
+                    attack.dataset_source || '-',
+                    (attack.detected_at || '').split('T')[1]?.split('.')[0] || '-'
+                ])
+
+                autoTable(doc, {
+                    startY: startY + 45,
+                    head: [['#', 'Tehdit Tipi', 'Güven Skoru', 'Tespit Modeli', 'Kaynak', 'Saat']],
+                    body: tableBody,
+                    styles: {
+                        font: 'Roboto',
+                        fontSize: 9,
+                        cellPadding: 4,
+                        textColor: [51, 65, 85]
+                    },
+                    headStyles: {
+                        fillColor: [30, 41, 59],
+                        textColor: 255,
+                        fontStyle: 'bold'
+                    },
+                    alternateRowStyles: {
+                        fillColor: [248, 250, 252]
+                    },
+                    columnStyles: {
+                        0: { cellWidth: 10 },
+                        2: { fontStyle: 'bold', textColor: [220, 38, 38] } // Confidence red
+                    },
+                    margin: { left: 14, right: 14 }
+                })
+            } else {
+                doc.setDrawColor(34, 197, 94) // Green border
+                doc.setFillColor(240, 253, 244) // Light green bg
+                doc.roundedRect(14, startY + 45, 182, 15, 2, 2, 'FD')
+                doc.setFontSize(10)
+                doc.setTextColor(21, 128, 61)
+                doc.text('Bu analizde herhangi bir tehdit veya anomali tespit edilmemiştir.', 20, startY + 54)
+            }
+
+            // 4. Footer
+            const totalPages = doc.getNumberOfPages()
+            for (let i = 1; i <= totalPages; i++) {
+                doc.setPage(i)
+                doc.setFontSize(8)
+                doc.setTextColor(148, 163, 184)
+                doc.text(
+                    `Anomi Ensemble AI - Güvenlik Raporu - Sayfa ${i} / ${totalPages}`,
+                    105,
+                    doc.internal.pageSize.height - 10,
+                    { align: 'center' }
+                )
+            }
+
+            // Save
+            doc.save(`Anomi_Guvenlik_Raporu_${job.job_id}.pdf`)
+
+        } catch (error) {
+            console.error('PDF generation error:', error)
+            alert('PDF oluşturulamadı. Konsolu kontrol edin.')
+        }
+    }
+
     return (
         <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
             <div className="flex items-center justify-between">
@@ -109,6 +282,14 @@ export default function ReportsPage() {
                 >
                     <RefreshCw size={18} className={loading ? "animate-spin" : ""} />
                 </button>
+                <a
+                    href={`${API_BASE}/api/export/attacks`}
+                    className="flex items-center gap-2 px-3 py-2 rounded-xl bg-red-500/10 hover:bg-red-500/20 text-red-500 text-sm font-medium transition-colors"
+                    title="Saldırıları CSV olarak indir"
+                >
+                    <Download size={16} />
+                    Saldırı Raporu
+                </a>
             </div>
 
             {/* Filters */}
@@ -182,12 +363,22 @@ export default function ReportsPage() {
                                         {formatDate(job.created_at)}
                                     </td>
                                     <td className="px-6 py-4">
-                                        <button
-                                            onClick={() => openDetail(job)}
-                                            className="text-primary hover:underline text-sm font-bold"
-                                        >
-                                            Detay
-                                        </button>
+                                        <div className="flex items-center gap-2">
+                                            <button
+                                                onClick={() => openDetail(job)}
+                                                className="text-primary hover:underline text-sm font-bold"
+                                            >
+                                                Detay
+                                            </button>
+                                            <button
+                                                onClick={() => generatePDF(job)}
+                                                className="flex items-center gap-1 text-red-500 hover:text-red-400 text-sm font-bold transition-colors"
+                                                title="PDF İndir"
+                                            >
+                                                <FileDown size={14} />
+                                                PDF
+                                            </button>
+                                        </div>
                                     </td>
                                 </tr>
                             ))
@@ -237,7 +428,12 @@ export default function ReportsPage() {
 
                         {/* Attacks List */}
                         <div className="p-6 overflow-auto max-h-[450px]">
-                            <h3 className="font-bold mb-4">Tespit Edilen Tehditler ({attacks.length})</h3>
+                            <h3 className="font-bold mb-4">
+                                Tespit Edilen Tehditler
+                                <span className="text-muted-foreground ml-2 text-sm font-normal">
+                                    (Toplam: {selectedJob.attacks_detected} - Gösterilen: İlk {attacks.length})
+                                </span>
+                            </h3>
 
                             {detailLoading ? (
                                 <div className="text-center py-8 text-muted-foreground">Yükleniyor...</div>
@@ -283,7 +479,7 @@ export default function ReportsPage() {
                                                             <span className="text-xs text-muted-foreground font-mono">#{attack.record_index}</span>
                                                         </div>
                                                         <p className="text-2xl font-bold mt-2">
-                                                            {logData.attack_type || logData.event_type || 'Bilinmeyen Tehdit'}
+                                                            {attack.attack_type || 'Şarj İstasyonu Anomalisi'}
                                                         </p>
                                                         <div className="flex items-center gap-2 text-sm text-muted-foreground">
                                                             <span>Tespit Eden Model:</span>

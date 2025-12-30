@@ -69,7 +69,7 @@ def send_log(line):
 
 def main():
     print("\n" + "="*50)
-    print(f"🛡️  LogIz GERÇEK Ajan Başlatıldı (Real-Time)")
+    print(f"🛡️  Anomi GERÇEK Ajan Başlatıldı (Real-Time)")
     print(f"📡 Hedef: {TARGET_URL}")
     print(f"💻 Host: {HOSTNAME}")
     print("="*50 + "\n")

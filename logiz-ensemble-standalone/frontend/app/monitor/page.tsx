@@ -217,15 +217,20 @@ if __name__ == "__main__":
                                 <p className="text-sm">Ajanlardan veri gelmeye başladığında burada görünecek.</p>
                             </div>
                         ) : (
-                            logs.map((log) => (
+                            logs.map((log, index) => (
                                 <div
                                     key={log.id}
                                     className={cn(
                                         "p-3 rounded-lg border-l-[3px] transition-all hover:bg-muted/50",
+                                        "animate-[slideIn_0.3s_ease-out]",
                                         log.analysis.is_attack
-                                            ? "bg-red-500/10 border-red-500"
+                                            ? "bg-red-500/10 border-red-500 shadow-[0_0_15px_rgba(239,68,68,0.3)]"
                                             : "bg-green-500/5 border-green-500"
                                     )}
+                                    style={{
+                                        animationDelay: `${Math.min(index * 50, 500)}ms`,
+                                        animationFillMode: 'both'
+                                    }}
                                 >
                                     <div className="flex items-center justify-between mb-1">
                                         <div className="flex items-center gap-2 text-muted-foreground">

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-LogIz Esnek Ajan - Kendi Test Senaryolarınız İçin
+Anomi Esnek Ajan - Kendi Test Senaryolarınız İçin
 =================================================
 Bu ajan iki modda çalışabilir:
 
@@ -73,12 +73,12 @@ def read_stdin():
         yield line
 
 def main():
-    parser = argparse.ArgumentParser(description="LogIz Esnek Ajan")
+    parser = argparse.ArgumentParser(description="Anomi Esnek Ajan")
     parser.add_argument('--file', '-f', type=str, help="İzlenecek log dosyası yolu")
     args = parser.parse_args()
 
     print("\n" + "="*50)
-    print("🔌 LogIz Esnek Ajan Başlatıldı")
+    print("🔌 Anomi Esnek Ajan Başlatıldı")
     print(f"📡 Hedef: {TARGET_URL}")
     print(f"💻 Host: {HOSTNAME}")
     print("="*50 + "\n")

@@ -25,9 +25,10 @@ export default function AnalysisPage() {
             // In a full implementation, this would call a specific endpoint
             // For now, we simulate by using a temporary file upload
 
-            const blob = new Blob([`message\n${query}`], { type: 'text/csv' })
+            // Send as TXT to handle commas correctly in raw log
+            const blob = new Blob([query], { type: 'text/plain' })
             const formData = new FormData()
-            formData.append('file', blob, 'single_query.csv')
+            formData.append('file', blob, 'single_query.txt')
 
             const response = await axios.post(`${API_BASE}/api/analyze/upload`, formData)
 
@@ -36,7 +37,8 @@ export default function AnalysisPage() {
                     decision: response.data.results.attacks_detected > 0 ? 'SALDIRI' : 'NORMAL',
                     model: response.data.results.model_used,
                     attacks: response.data.results.attacks_detected,
-                    normal: response.data.results.normal_traffic
+                    normal: response.data.results.normal_traffic,
+                    detailed_logs: response.data.results.detailed_logs
                 })
             } else {
                 setError(response.data.error || 'Analiz hatası')
@@ -91,28 +93,90 @@ export default function AnalysisPage() {
                     </button>
                 </div>
 
-                {/* Result */}
-                {result && (
-                    <div className={cn(
-                        "p-6 rounded-2xl border-2 flex items-center gap-4",
-                        result.decision === 'SALDIRI' ? "bg-red-500/10 border-red-500/30" : "bg-green-500/10 border-green-500/30"
-                    )}>
-                        {result.decision === 'SALDIRI' ? (
-                            <AlertCircle className="text-red-500" size={32} />
-                        ) : (
-                            <CheckCircle2 className="text-green-500" size={32} />
-                        )}
-                        <div>
-                            <h3 className={cn(
-                                "text-xl font-bold",
-                                result.decision === 'SALDIRI' ? "text-red-500" : "text-green-500"
+                {/* Hızlı Analiz için Özet Kısım Kaldırıldı (Kullanıcı İsteği) */}
+
+                {/* Detailed Logs View - Now Primary */}
+                {result && result.detailed_logs && result.detailed_logs.length > 0 && (
+                    <div className="space-y-4 animate-in slide-in-from-bottom-2 duration-500">
+                        {/* <h3 className="text-lg font-bold px-1">Detaylı Analiz Raporu</h3> - Başlık da kaldırılabilir, direkt kart gösterilsin */}
+                        {result.detailed_logs.map((log: any, idx: number) => (
+                            <div key={idx} className={cn(
+                                "rounded-3xl p-8 border-2 shadow-2xl transition-all",
+                                log.attack_detected
+                                    ? "bg-red-500/10 border-red-500/50 shadow-red-900/20"
+                                    : "bg-green-500/10 border-green-500/50 shadow-green-900/20"
                             )}>
-                                {result.decision === 'SALDIRI' ? '🚨 Tehdit Tespit Edildi!' : '✅ Güvenli'}
-                            </h3>
-                            <p className="text-sm text-muted-foreground mt-1">
-                                Model: {result.model} | Saldırı: {result.attacks} | Normal: {result.normal}
-                            </p>
-                        </div>
+                                {/* Header */}
+                                <div className="flex flex-col md:flex-row md:justify-between md:items-start gap-6 mb-8 border-b border-white/10 pb-6">
+                                    <div className="flex items-center gap-4">
+                                        {log.attack_detected ? (
+                                            <div className="p-4 rounded-full bg-red-500/20 text-red-500 animate-pulse">
+                                                <AlertCircle size={40} />
+                                            </div>
+                                        ) : (
+                                            <div className="p-4 rounded-full bg-green-500/20 text-green-500">
+                                                <CheckCircle2 size={40} />
+                                            </div>
+                                        )}
+
+                                        <div>
+                                            <h2 className={cn(
+                                                "text-3xl font-black uppercase tracking-tight",
+                                                log.attack_detected ? "text-red-500" : "text-green-500"
+                                            )}>
+                                                {log.attack_detected ? "TEHDİT TESPİT EDİLDİ!" : "GÜVENLİ İŞLEM"}
+                                            </h2>
+                                            <div className="flex items-center gap-3 mt-2">
+                                                <span className="text-lg text-foreground font-semibold">
+                                                    Karar: {log.decision}
+                                                </span>
+                                                <span className="text-white/20">|</span>
+                                                <span className="text-lg text-foreground font-semibold">
+                                                    Güven Skoru:
+                                                    <span className={cn(
+                                                        "ml-2 px-3 py-1 rounded-lg text-white",
+                                                        log.confidence > 0.8 ? "bg-green-600" : "bg-yellow-600"
+                                                    )}>
+                                                        %{(log.confidence * 100).toFixed(1)}
+                                                    </span>
+                                                </span>
+                                                <span className="text-white/20">|</span>
+                                                <span className="text-sm text-muted-foreground font-mono">
+                                                    Model: {log.winning_model}
+                                                </span>
+                                            </div>
+
+                                            {/* Reason / Explanation */}
+                                            <div className="mt-4 p-4 rounded-xl bg-white/5 border border-white/10 max-w-2xl">
+                                                <div className="flex items-center gap-2 mb-1">
+                                                    <Zap size={14} className={log.attack_detected ? "text-red-400" : "text-green-400"} />
+                                                    <h5 className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Analiz Nedeni</h5>
+                                                </div>
+                                                <p className="text-base font-medium text-foreground">
+                                                    {log.reason || "Yapay zeka modelleri tarafından değerlendirildi."}
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Raw Data Table */}
+                                <div className="bg-black/40 rounded-2xl p-6 border border-white/5">
+                                    <h4 className="flex items-center gap-2 text-sm font-bold text-muted-foreground uppercase tracking-widest mb-6">
+                                        <Search size={16} />
+                                        Log İçeriği ve Öznitelikler
+                                    </h4>
+                                    <div className="grid grid-cols-1 xl:grid-cols-2 gap-x-12 gap-y-4">
+                                        {Object.entries(log.raw_data).map(([key, value]) => (
+                                            <div key={key} className="group flex flex-col border-b border-white/5 pb-2 hover:bg-white/5 transition-colors px-3 rounded-lg">
+                                                <span className="text-xs text-muted-foreground font-bold mb-1 opacity-70 group-hover:opacity-100 transition-opacity">{key}</span>
+                                                <span className="font-mono text-base text-foreground break-all">{String(value)}</span>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            </div>
+                        ))}
                     </div>
                 )}
 

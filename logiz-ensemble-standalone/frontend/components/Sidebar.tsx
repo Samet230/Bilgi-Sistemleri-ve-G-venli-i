@@ -64,9 +64,13 @@ export default function Sidebar() {
         >
             <div className="p-6 flex items-center justify-between">
                 {!collapsed && (
-                    <div className="flex items-center gap-2 font-bold text-xl tracking-tight text-primary">
-                        <Zap className="fill-primary" />
-                        <span>LogIz AI</span>
+                    <div className="flex items-center gap-3 px-1">
+                        <div className="bg-primary/20 p-2 rounded-lg">
+                            <Zap className="fill-primary text-primary w-6 h-6" />
+                        </div>
+                        <span className="text-2xl font-black tracking-tighter text-white">
+                            ANOMI AI
+                        </span>
                     </div>
                 )}
                 <button
