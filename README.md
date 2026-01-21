@@ -203,16 +203,16 @@ curl -X POST http://localhost:5050/api/analyze \
 
 | Üye | Öğrenci No | Senaryo |
 |-----|------------|---------|
-| **SAMET ŞAHİN** (Lider) | - | IDS/IPS Güvenlik Logları |
-| EMİRHAN | 230542031 | Yetkisiz Şarj Komutu Enjeksiyonu |
-| YOUSEF TALJBİNİ | 230541601 | TLS Downgrade Saldırıları |
-| SUZAN BATTAL | 220541614 | Tarife Manipülasyonu |
-| ATAKAN | - | Yük Verisi Manipülasyonu |
-| İBRAHİM HALİL ŞAHİN | 230541112 | CSMS Backend Anomalisi |
-| İREM TÜFEKÇİ | 230541040 | CAN Bus Anomalisi |
-| MİRAÇ POLAT | 230541021 | Plaka/Kimlik Doğrulama |
-| EMİRHAN TURAN | 230541129 | Zaman/Tarife Manipülasyonu |
-| ALİ | - | OCPP RemoteStop Saldırısı |
+| **Samet Şahin** (Scrum Master) | 230541096 | IDS/IPS Güvenlik Logları (LogIz) |
+| Emirhan Aydemir | 230542031 | Yetkisiz Şarj Komutu Enjeksiyonu |
+| İrem Tüfekçi | 230541040 | CAN Bus Anomalisi |
+| İbrahim Şahin | 230541112 | CSMS Backend Anomalisi |
+| Emirhan Turan | 230541129 | Zaman/Tarife Manipülasyonu |
+| Miraç Polat | 230541021 | Plaka/Kimlik Doğrulama |
+| Suzan Battal | 220541614 | Tarife Manipülasyonu |
+| Atakan Akyol | 230541060 | Yük Verisi Manipülasyonu |
+| Yousef Taljibini | 230541601 | TLS Downgrade Saldırıları |
+| Ali Giriş | 230541027 | OCPP RemoteStop Saldırısı |
 
 ---
 
