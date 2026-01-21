@@ -1,1 +1,0 @@
- Merhaba ben 230541129 numaralı Yazılım Mühendisliği öğrencisi Emirhan Turan.  Bu repo, Bilgi Sistemleri Ve Güvenliği dersi adı altında yaptığımız proje için yaptığım araştırma ve çalışmalardan oluşmaktadır.
