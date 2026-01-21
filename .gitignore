@@ -1,0 +1,88 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+venv/
+env/
+.venv/
+
+# Node.js
+node_modules/
+.next/
+out/
+.npm
+*.log
+npm-debug.log*
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Test ve Debug dosyaları
+tests/
+test_*.py
+*_test.py
+debug_*.py
+debug_*.txt
+*_output.txt
+test_output.txt
+
+# Log dosyaları
+*.log
+logs/
+
+# Büyük veri setleri (archive)
+data/archive/
+archive/
+
+# Geçici dosyalar
+*.tmp
+*.temp
+*.bak
+*.old
+
+# Analiz sonuçları (gerekli değil)
+data/results/
+*_analysis*.json
+ml_test_results.json
+
+# Önceki README yedekleri
+README_*.md
+docs/README_ORIGINAL.md
+
+# Scripts klasörü (geliştirme için)
+scripts/
+
+# Gereksiz model klasörleri (sadece ensemble gerekli)
+models/
+
+# Değerlendirme dosyaları
+docs/EKIP_*.md
+docs/EKIP_*.csv
+
+# Gemini brain klasörü
+.gemini/

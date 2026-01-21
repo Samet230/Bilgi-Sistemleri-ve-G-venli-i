@@ -33,20 +33,37 @@ DATASET_CONFIGS = {
 SAFE_PATTERNS = [
     # Health check endpoints
     "/health", "/healthz", "/ready", "/readiness", "/liveness",
-    "/api/v1/health", "/actuator/health", "/status",
-    # Normal OCPP heartbeats
-    "heartbeat", "boot", "bootnotification",
-    # Normal responses
-    "200 ok", "201 created", "204 no content",
-    # Normal operations
+    "/api/v1/health", "/actuator/health", "/status", "/ping",
+    # Normal OCPP heartbeats and operations
+    "heartbeat", "boot", "bootnotification", "statusnotification",
+    "metervalues response", "datatransfer", "authorize response",
+    # Normal HTTP responses
+    "200 ok", "201 created", "204 no content", "302 redirect",
+    # Normal operations - Turkish
     "trafik akışı temiz", "servis sağlık kontrolü",
-    "login success", "başarılı", "success",
-    # İBRAHİM CSMS logs - Normal operations (specific patterns only, not generic 'info')
-    "şarj başlatma", "enerji tüketimi", "yeni cp bağlandı",
-    "transaction id", "bağlantı",
-    "clock synced with ntp", "ntp senkronizasyonu",
-    "clock synced with ntp", "ntp senkronizasyonu",
-    "ocpp -> can mesajı iletildi", "can mesajı iletildi", # Normal operation variations
+    "login success", "başarılı", "success", "completed", "tamamlandı",
+    "bağlantı kuruldu", "connection established",
+    # İBRAHİM CSMS logs - Normal operations
+    "şarj başlatma", "şarj başladı", "şarj tamamlandı",
+    "enerji tüketimi", "yeni cp bağlandı", "cp bağlandı",
+    "transaction id", "bağlantı başarılı",
+    "clock synced", "ntp senkronizasyonu", "zaman senkronizasyonu",
+    "ocpp -> can mesajı iletildi", "can mesajı iletildi",
+    "mesaj gönderildi", "mesaj alındı",
+    # System logs - Normal operations
+    "service started", "servis başlatıldı",
+    "configuration loaded", "config yüklendi",
+    "scheduled task", "zamanlanmış görev",
+    "backup completed", "yedekleme tamamlandı",
+    "log rotation", "log döndürme",
+    # Authentication - Successful
+    "authentication successful", "kimlik doğrulama başarılı",
+    "session created", "oturum açıldı",
+    "token refreshed", "token yenilendi",
+    # Normal warnings (not attacks)
+    "low battery", "düşük batarya",
+    "maintenance mode", "bakım modu",
+    "rate limit", "hız sınırı",  # Rate limiting is protective, not attack
 ]
 
 # EV Şarj İstasyonu Saldırı Sınıflandırma Kuralları
@@ -282,16 +299,27 @@ class EnsembleDetector:
             # But only if it doesn't look like an attack (e.g. "HEARTBEAT_FLOOD" should not be whitelisted)
             is_whitelisted = any(safe_pattern in text_for_classification for safe_pattern in SAFE_PATTERNS)
             
-            # Turkish + English attack keywords
+            # Turkish + English attack keywords - More specific to reduce false positives
+            # Only trigger on clear attack indicators, not generic operational terms
             attack_keywords = [
-                # English
-                "flood", "attack", "fail", "error", "denied", "unauthorized", "intrusion", "malware",
-                "timestamp", "firmware", "manipulation", "bypass", "tunnel", "vpn",
-                # Turkish (İBRAHİM, ATAKAN, SAMET specific)
-                "güvenlik", "sızma", "saldırı", "anomali", "kritik", "critical",
-                "alarm", "emergency", "acil", "tehdit", "hack", "exploit",
-                "zaman", "yetkisiz", "reddedildi", "enjeksiyon", "tünel", "tünelleme"
-                # Removed: "köprüleme" (appears in normal logs too)
+                # Clear attack indicators (English)
+                "flood", "flooding", "ddos", "dos_attack", "brute_force", "bruteforce",
+                "injection", "sql_injection", "xss", "malware", "trojan", "backdoor",
+                "exploit", "payload", "shellcode", "rootkit", "keylogger",
+                "unauthorized_access", "privilege_escalation", "lateral_movement",
+                "data_exfiltration", "ransomware", "cryptominer",
+                # Clear attack indicators (Turkish)
+                "saldırı", "saldiri", "sızma", "kaba_kuvvet", "enjeksiyon",
+                "yetkisiz_erişim", "yetki_yükseltme", "veri_sızdırma",
+                "tehdit_algılandı", "güvenlik_ihlali", "hack_girişimi",
+                # Compound phrases that indicate attacks (not single words)
+                "intrusion detected", "attack detected", "threat detected",
+                "security breach", "malicious activity", "suspicious behavior",
+                "güvenlik ihlali", "tehdit tespit", "saldırı tespit",
+                # Removed to prevent false positives:
+                # "timestamp", "error", "fail", "denied", "alarm", "emergency", 
+                # "acil", "kritik", "critical", "anomali", "güvenlik", "bypass",
+                # "tunnel", "vpn", "firmware", "zaman"
             ]
             has_attack_keyword = any(k in text_for_classification for k in attack_keywords)
             
