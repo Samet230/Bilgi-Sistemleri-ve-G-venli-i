@@ -201,18 +201,18 @@ curl -X POST http://localhost:5050/api/analyze \
 
 ## 👥 Ekip
 
-| Üye | Öğrenci No | Senaryo |
-|-----|------------|---------|
-| **Samet Şahin** (Scrum Master) | 230541096 | IDS/IPS Güvenlik Logları (LogIz) |
-| Emirhan Aydemir | 230542031 | Yetkisiz Şarj Komutu Enjeksiyonu |
-| İrem Tüfekçi | 230541040 | CAN Bus Anomalisi |
-| İbrahim Şahin | 230541112 | CSMS Backend Anomalisi |
-| Emirhan Turan | 230541129 | Zaman/Tarife Manipülasyonu |
-| Miraç Polat | 230541021 | Plaka/Kimlik Doğrulama |
-| Suzan Battal | 220541614 | Tarife Manipülasyonu |
-| Atakan Akyol | 230541060 | Yük Verisi Manipülasyonu |
-| Yousef Taljibini | 230541601 | TLS Downgrade Saldırıları |
-| Ali Giriş | 230541027 | OCPP RemoteStop Saldırısı |
+| Üye | Senaryo |
+|-----|---------|
+| **Samet Şahin** (Scrum Master) | IDS/IPS Güvenlik Logları (LogIz) |
+| Emirhan Aydemir | Yetkisiz Şarj Komutu Enjeksiyonu |
+| İrem Tüfekçi | CAN Bus Anomalisi |
+| İbrahim Şahin | CSMS Backend Anomalisi |
+| Emirhan Turan | Zaman/Tarife Manipülasyonu |
+| Miraç Polat | Plaka/Kimlik Doğrulama |
+| Suzan Battal | Tarife Manipülasyonu |
+| Atakan Akyol | Yük Verisi Manipülasyonu |
+| Yousef Taljibini | TLS Downgrade Saldırıları |
+| Ali Giriş | OCPP RemoteStop Saldırısı |
 
 ---
 
